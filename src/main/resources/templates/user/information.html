@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/user}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content" class="container-fluid py-3">
+    <div class="mb-2">
+        <div class="bg-white container shadow rounded d-flex flex-row p-0">
+            <div class="p-3 text-center bg-primary-subtle rounded  col-3">
+                <a th:href="@{/user/profile/{id}(id=${#ctx.session.account.id})}" class=" text-decoration-none">Thông
+                    tin</a>
+            </div>
+            <div class="p-3 text-center col-3">
+                <a th:href="@{/user/password/{id}(id=${#ctx.session.account.id})}" class=" text-decoration-none">Đổi mật
+                    khẩu</a>
+            </div>
+            <div class="p-3 text-center col-3">
+                <a th:href="@{/user/payment/{id}(id=${#ctx.session.account.id})}" class=" text-decoration-none">Lịch sủ
+                    thanh
+                    toán</a>
+            </div>
+            <div class="p-3 text-center col-3">
+                <a th:href="@{/user/story/{id}(id=${#ctx.session.account.id})}" class=" text-decoration-none">Truyện đã
+                    thanh
+                    toán</a>
+            </div>
+        </div>
+    </div>
+    <div class="mt-5">
+        <div class="bg-white container shadow rounded p-0">
+            <div class="d-flex flex-row">
+                <div class="col-4 d-flex align-items-center justify-content-center">
+                    <div class="">
+                        <img th:src="@{/files/avatar/{avatar}(avatar=${account.information.avatar})}"
+                             class="border rounded-circle"
+                        >
+                        <a href="#"
+                           role="button"
+                           class="btn btn-outline-primary mt-2 position-absolute"
+                           onclick="editAvatar()">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+
+                        <form class="mt-3 py-4" id="editAvatar"
+                              th:action="@{/user/profile/{id}(id=${account.id})}"
+                              method="post"
+                              enctype="multipart/form-data">
+                            <input type="file" class="form-control my-2" name="avatar">
+                            <div class="float-end">
+                                <input type="button" class="btn btn-outline-secondary  ms-3" onclick="closeEdit()"
+                                       value="Đóng">
+                                <input type="submit" class="btn btn-outline-primary " value="Lưu">
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+                <div class="col-8">
+                    <div class="border-bottom py-3 my-3 mx-5">
+                        <b class="h5 text-secondary d-inline-block" style="min-width: 150px">Tên:</b> <span
+                            th:utext="${account.information.fullName}"></span>
+                    </div>
+                    <div class="border-bottom py-3 my-3 mx-5">
+                        <b class="h5 text-secondary d-inline-block" style="min-width: 150px">Email:</b> <span
+                            th:utext="${account.email}"></span>
+                    </div>
+                    <div class="border-bottom py-3 my-3 mx-5">
+                        <b class="h5 text-secondary d-inline-block" style="min-width: 150px">Số điện thoại:</b> <span
+                            th:utext="${account.information.phoneNumber}"></span>
+                    </div>
+                    <div class="border-bottom py-3 my-3 mx-5">
+                        <b class="h5 text-secondary d-inline-block" style="min-width: 150px">Ngày sinh:</b> <span
+                            th:utext="${account.information.dob}"></span>
+                    </div>
+                    <div class="border-bottom py-3 my-3 mx-5">
+                        <b class="h5 text-secondary d-inline-block" style="min-width: 150px">Giới tinh:</b> <span
+                            th:utext="${account.information.gender.name()}"></span>
+                    </div>
+                    <div class="border-bottom py-3 my-3 mx-5">
+                        <b class="h5 text-secondary d-inline-block" style="min-width: 150px">Địa chỉ:</b> <span
+                            th:utext="${account.information.address}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

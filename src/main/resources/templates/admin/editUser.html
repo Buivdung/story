@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}"
+>
+<head th:replace="~{common/fragment::head}"> </head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-10">
+        <div class="bg-white shadow rounded p-3 mb-3 text-center h2" style="color: #0dcaf0">
+            Thay đổi thông tin người dùng
+        </div>
+        <form th:action="@{/admin/account/{id}(id=${account.id})}" method="post" th:object="${accountReq}">
+            <div th:if="${#fields.hasAnyErrors()}">
+                <ul>
+                    <li th:each="err : ${#fields.allErrors()}" th:utext="${err}"></li>
+                </ul>
+            </div>
+            <div>
+                <label>Họ và tên:</label>
+                <input type="text" name="fullName" th:value="${account.information.fullName}" class="form-control"
+                       placeholder="Nhập họ và tên..." required>
+                <!--                            <p th:if="${#fields.hasErrors('accountInformationDto.fullName')}" class="text-danger" th:errors="*{accountInformationDto.fullName}"></p>-->
+            </div>
+
+            <div>
+                <label>Số điện thoại:</label>
+                <input type="text" class="form-control" name="phoneNumber" th:value="${account.information.phoneNumber}"
+                       placeholder="Nhập số điện thoại..." required>
+                <!--                            <p th:if="${#fields.hasErrors('accountInformationDto.phoneNumber')}" class="text-danger" th:errors="*{accountInformationDto.phoneNumber}"></p>-->
+            </div>
+            <div>
+                <label>Ngày sinh:</label>
+                <input type="date" name="dob" class="form-control" th:value="${account.information.dob}" required>
+                <!--                            <p th:if="${#fields.hasErrors('dob')}" class="text-danger" th:errors="*{accountInformationDto.dob}"></p>-->
+            </div>
+            <div>
+                <label class="d-block">Giới tính:</label>
+                <div class="ps-4">
+                    <input type="radio" name="gender" th:checked="${account.information.gender.name() == 'MALE'}" value="MALE"/>
+                    <label>Nam</label>
+                    <input type="radio" name="gender" th:checked="${account.information.gender.name() == 'FEMALE'}" value="FEMALE"/>
+                    <label>Nữ</label>
+                    <input type="radio" name="gender" th:checked="${account.information.gender.name() == 'ORTHER'}" value="OTHER"/>
+                    <label>Khác</label>
+                </div>
+                <!--                            <p th:if="${#fields.hasErrors('gender')}" class="text-danger" th:errors="*{gender}"></p>-->
+            </div>
+
+            <div>
+                <label>Email:</label>
+                <input type="email" class="form-control" name="email" readonly th:value="${account.email}"
+                       placeholder="Nhập email...">
+                <!--                            <p th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></p>-->
+            </div>
+            <div>
+                <label>Mật khẩu:</label>
+                <input type="password" class="form-control" name="password" th:value="${account.password}"
+                       placeholder="Nhập mật khẩu..." required>
+                <!--                            <p th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></p>-->
+            </div>
+            <div>
+                <label>Địa chỉ:</label>
+                <textarea th:utext="${account.information.address}" name="address" class="form-control" rows="2"
+                          placeholder="Nhập địa chỉ"></textarea>
+            </div>
+            <div>
+                <label>Role</label>
+                <select name="role" class="form-select">
+                    <option th:selected="${account.role.name() == 'ROLE_USER'}" th:value="ROLE_USER" selected>USER</option>
+                    <option th:selected="${account.role.name() == 'ROLE_ADMIN'}" th:value="ROLE_ADMIN">ADMIN</option>
+                </select>
+            </div>
+            <div class="py-2 float-end">
+                <button class="btn btn-outline-warning" type="button" onclick="history.back()">
+                    Quay lại
+                </button>
+                <button class="btn btn-outline-success " type="submit">
+                    Lưu
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

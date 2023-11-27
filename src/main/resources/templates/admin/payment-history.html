@@ -1,0 +1,99 @@
+﻿<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-10">
+        <div class="bg-white shadow rounded p-3 mb-3 text-center h2" style="color: #0dcaf0">
+            Lịch sử giao dịch
+        </div>
+        <div class="bg-white shadow rounded p-3">
+            <div th:if="${searchResp.alert}"
+                 class="text-center pt-4 alert alert-primary"
+                 role="alert" id="alertCustom" th:utext="${searchResp .alert}"></div>
+            <div class="bg-white">
+                <div class="row">
+                    <form class="d-flex col-10" method="get" th:action="@{/admin/payment}">
+                        <div class="col-3 d-flex align-content-cente me-3">
+                            <button class="btn btn-outline-secondary" disabled>Show:</button>
+                            <select name="pageSize" id="pageSize" class="form-select ms-2">
+                                <option th:selected="${searchResp.pageSize == 5}" value="5">5</option>
+                                <option th:selected="${searchResp.pageSize == 10}" value="10">10</option>
+                                <option th:selected="${searchResp.pageSize == 15}" value="15">15</option>
+                                <option th:selected="${searchResp.pageSize == 20}" value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="col-9 d-flex">
+                            <input class="form-control me-2" name="param" th:value="${searchResp.param}"
+                                   placeholder="Tìm kiếm lịch sử giao dịch"
+                                   aria-label="Search">
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <h6 class="text-danger text-center pt-4" th:if="${searchResp.massage != null}"
+                    th:utext="${searchResp.massage}"></h6>
+                <table th:if="${searchResp.massage == null}" class="table my-3 table-hover text-center">
+                    <thead>
+                    <tr>
+                        <th class="bg-primary-subtle" scope="col">Stt</th>
+                        <th class="bg-primary-subtle" scope="col">Tên người dùng</th>
+                        <th class="bg-primary-subtle" scope="col">Email</th>
+                        <th class="bg-primary-subtle" scope="col">Tên truyện</th>
+                        <th class="bg-primary-subtle" scope="col">Tiền</th>
+                        <th class="bg-primary-subtle" scope="col">Chú thích</th>
+                        <th class="bg-primary-subtle" scope="col">Ngày Thanh toán</th>
+                        <th class="bg-primary-subtle" scope="col">Trạng thái</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p,i : ${payments}">
+                        <td th:utext="${i.count}"></td>
+                        <td th:utext="${p.account.information.fullName}"></td>
+                        <td th:utext="${p.account.email}"></td>
+                        <td th:utext="${p.story.name}"></td>
+                        <td th:utext="${p.story.money}"></td>
+                        <td th:utext="${p.comment}"></td>
+                        <td th:utext="${p.createDate}"></td>
+                        <td th:classappend="${p.status.name() == 'SUCCESS' ? 'text-primary' :
+                        (p.status.name() == 'FAIL' ? 'text-danger' : '')}" th:utext="${p.status.name()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <nav th:if="${searchResp.massage == null}" aria-label="Page navigation example">
+                    <ul class="pagination d-flex justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link"
+                               th:with="id=(${searchResp.pageNumber > 1 ? searchResp.pageNumber - 1 : 1})"
+                               th:href="@{/admin/payment(pageNumber=${id},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}">
+                                <<
+                            </a>
+                        </li>
+                        <li class="page-item" th:each="e: ${searchResp.pageMax}">
+                            <a class="page-link"
+                               th:href="@{/admin/payment(pageNumber=${e},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}"
+                               th:classappend="${searchResp.pageNumber == e ? 'text-danger' : ''}" th:utext="${e}">
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               th:with="id=(${searchResp.pageNumber < searchResp.pageMax.size() ? searchResp.pageNumber + 1 : searchResp.pageNumber})"
+                               th:href="@{/admin/payment(pageNumber=${id},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}">
+                                >>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

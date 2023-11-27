@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-10">
+        <div class="bg-white shadow rounded mb-3 d-flex">
+            <div class="p-3 text-center bg-primary-subtle rounded col-6" >
+                <a th:href="@{/admin/story/{id}(id=${story.id})}"
+                   class=" text-decoration-none h2" style="color: #0dcaf0">Thông tin truyện</a>
+            </div>
+            <div class="p-3 text-center col-6" >
+                <a th:href="@{/admin/{storyId}/chapters(storyId=${story.id})}"
+                   class=" text-decoration-none h2" style="color: #0dcaf0">Danh sách chương</a>
+            </div>
+
+        </div>
+        <div class="bg-white shadow rounded p-3 mb-3">
+            <div class="row m-0">
+                <div class="col-3">
+                    <div class="d-flex justify-content-center mt-5 position-relative">
+                        <img th:src="@{/files/images/{id}/{name}(id=${story.id},name=${story.thumbnail})}"
+                             class="border p-1 me-2"
+                             alt="" width="auto" height="auto">
+                        <a href="#"
+                           role="button"
+                           class="btn btn-outline-primary mt-2 position-absolute"
+                           style="top: 100%"
+                           onclick="editThumbnail()">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                    </div>
+
+                    <form class="mt-3 py-4" id="editThumbnail"
+                          th:action="@{/admin/story/thumbnail/{id}(id=${story.id})}"
+                          method="post"
+                          enctype="multipart/form-data">
+                        <input type="file" class="form-control my-2" name="thumbnail">
+                        <div class="float-end">
+                            <input type="button" class="btn btn-outline-secondary  ms-3" onclick="closeEdit()"
+                                   value="Đóng">
+                            <input type="submit" class="btn btn-outline-primary " value="Lưu">
+                        </div>
+                    </form>
+                </div>
+                <div class="col-9">
+                    <form th:action="@{/admin/story/{id}(id=${story.id})}" method="post" th:object="${storyReq}"
+                          enctype="multipart/form-data">
+                        <input type="hidden" class="form-control" name="id" th:value="${story.id}" required>
+                        <div>
+                            <label>Tên truyện:</label>
+                            <input type="text" class="form-control" name="name" th:value="${story.name}" required>
+                        </div>
+                        <div>
+                            <label>Tác giả:</label>
+                            <input type="text" class="form-control" name="author" th:value="${story.author}" required>
+                        </div>
+                        <div>
+                            <label>Tổng số chương:</label>
+                            <input type="text" class="form-control" name="chapterTotal" th:value="${story.chapterTotal}"
+                                   readonly>
+                        </div>
+                        <div>
+                            <label>Lượt đọc:</label>
+                            <input type="text" class="form-control" name="review" th:value="${story.review}" readonly>
+                        </div>
+                        <div>
+                            <label>Thể loại:</label>
+                            <div class="d-flex flex-row flex-wrap">
+                                <div th:each="gOff : ${story.storiesGenres}">
+                                    <input type="checkbox" class="ms-3" name="genreId" th:value="${gOff.genre.id}"
+                                           checked>
+                                    <label th:utext="${gOff.genre.name}"></label>
+                                </div>
+                                <div th:each="gOn : ${genres}">
+                                    <input type="checkbox" class="ms-3" name="genreId" th:value="${gOn.id}">
+                                    <label th:utext="${gOn.name}"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="d-block">Phân loại:</label>
+                            <input class="ms-3" type="checkbox" name="type" th:checked="${story.type}">
+                            <label> Trả phí</label>
+                        </div>
+                        <div>
+                            <label>Tiền phí</label>
+                            <input type="number" class="form-control" name="money" th:value="${story.money}">
+                        </div>
+                        <div>
+                            <label>Trạng thái:</label>
+                            <select class="form-select" name="status">
+                                <option th:selected="${story.status.name() == 'PENDING'}" class="form-select"
+                                        value="PENDING"> Đang up
+                                    date
+                                </option>
+                                <option th:selected="${story.status.name() == 'FULL'}" class="form-select" value="FULL">
+                                    Hoàn thành
+                                </option>
+                            </select>
+                        </div>
+                        <div class="py-2 float-end">
+                            <button class="btn btn-outline-success " type="submit">
+                                Lưu
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="py-3 px-5 border-top">
+                <h5 class="text-center">Tóm tắt truyện
+                    <a href="#" role="button"
+                       class="btn btn-outline-primary float-end"
+                       onclick="editIntroduction()">
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                </h5>
+                <form class="py-4" id="editIntroduction"
+                      th:action="@{/admin/story/introduction/{id}(id=${story.id})}"
+                      method="post"
+                      enctype="multipart/form-data">
+                    <input type="file" class="form-control my-2" name="introduction">
+                    <div class="float-end">
+                        <input type="button"
+                               class="btn btn-outline-secondary  ms-3"
+                               onclick="closeEdit()" value="Đóng">
+                        <input type="submit" class="btn btn-outline-primary " value="Lưu">
+                    </div>
+                </form>
+                <p th:each="line: ${lines}" th:utext="${line}"></p>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

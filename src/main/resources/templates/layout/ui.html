@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+<div class="sticky-top">
+    <nav class="navbar navbar-expand-lg bg-primary shadow">
+        <div class="container  text-white">
+            <a class="navbar-brand text-white" th:href="@{/}">TRUYỆN ONL</a>
+            <div class="ps-2 collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+                <div class="btn-group">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Danh Sách
+                    </a>
+                    <ul class="dropdown-menu" style="top: 150%">
+                        <li th:each="g : ${#ctx.session.genres}" class="my-3 hoverGenre">
+                            <a class="dropdown-item"
+                               th:href="@{/search(param=${g.name})}"
+                               th:utext="${g.name}">
+                                Action
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <form class="d-flex align-items-center" th:action="@{/search}" role="search">
+                    <input class="form-control me-2 bg-primary-subtle border-white" type="search" required
+                           name="param"
+                           th:value="${#ctx.session.searchResp != null ?  #ctx.session.searchResp.param : ''}"
+                           placeholder="Tìm kiếm" aria-label="Search">
+                    <button type="submit" class="btn btn-outline-success">
+                        <i class="fa-solid fa-magnifying-glass text-white"></i>
+                    </button>
+                </form>
+                <a class="nav-link" sec:authorize="!isAuthenticated()" th:href="@{/login}">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Đăng nhập
+                </a>
+                <div class="btn-group" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        <span th:utext="${#ctx.session.account.information.fullName}"></span>
+                        <img th:src="@{/files/avatar/{avatar}(avatar=${#ctx.session.account.information.avatar})}"
+                             alt="" class="rounded-circle" width="30px" height="30px">
+                    </a>
+                    <ul class="dropdown-menu" style="top:150%;">
+                        <li><a class="dropdown-item"
+                               sec:authorize="hasRole('ROLE_ADMIN')"
+                               th:href="@{/admin/stories}">
+                            Đến trang admin
+                        </a></li>
+                        <li><a class="dropdown-item"
+                               th:href="@{/user/profile/{id}(id=${#ctx.session.account.id})}">
+                            Thông tin cá nhân
+                        </a></li>
+                        <li><a class="dropdown-item" th:href="@{/logout}">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Đăng xuất</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div layout:fragment="content" class="row p-3 m-0" style="background-color: rgba(0, 0, 0, 0.05); min-height: 85vh;">
+
+</div>
+<div class="text-center border-top container">
+    Truyện Full - Đọc truyện online, đọc truyện chữ, truyện hay. Website luôn cập nhật những bộ truyện mới thuộc các
+    thể loại đặc sắc như truyện tiên hiệp, truyện kiếm hiệp, hay truyện ngôn tình một cách nhanh nhất. Hỗ trợ mọi
+    thiết bị như di động và máy tính bảng.
+</div>
+<script th:src="@{/js/ui.js}"></script>
+
+</body>
+
+</html>

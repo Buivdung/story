@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-10">
+        <div class="bg-white shadow rounded p-3 mb-3 text-center h2" style="color: #0dcaf0">
+            Danh sách người dùng
+        </div>
+
+        <div th:if="${searchResp.alert}"
+             class="text-center pt-4 alert alert-primary"
+             role="alert" id="alertCustom" th:utext="${searchResp .alert}"></div>
+        <div class="bg-white shadow rounded p-3">
+            <div class="row">
+                <form class="d-flex col-10" method="get" th:action="@{/admin/accounts}">
+                    <div class="col-3 d-flex align-content-cente me-3">
+                        <button class="btn btn-outline-secondary" disabled>Show:</button>
+                        <select name="pageSize" id="pageSize" class="form-select ms-2">
+                            <option th:selected="${searchResp.pageSize == 5}" value="5">5</option>
+                            <option th:selected="${searchResp.pageSize == 10}" value="10">10</option>
+                            <option th:selected="${searchResp.pageSize == 15}" value="15">15</option>
+                            <option th:selected="${searchResp.pageSize == 20}" value="20">20</option>
+                        </select>
+                    </div>
+                    <div class="col-9 d-flex">
+                        <input class="form-control me-2" name="param" th:value="${searchResp.param}"
+                               placeholder="Tìm kiếm người dùng"
+                               aria-label="Search">
+                        <button class="btn btn-outline-primary" type="submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </form>
+                <div class="col-2 text-center">
+                    <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#addUser">
+                        Thêm
+                    </button>
+                </div>
+            </div>
+            <h6 class="text-danger text-center pt-4" th:if="${searchResp.massage != null}"
+                th:utext="${searchResp.massage}"></h6>
+            <table th:if="${searchResp.massage == null}" class="table my-3 table-hover text-center">
+                <thead>
+                <tr>
+                    <th class="bg-primary-subtle" scope="col">Tên</th>
+                    <th class="bg-primary-subtle" scope="col">Email</th>
+                    <th class="bg-primary-subtle" scope="col">Số điện thoại</th>
+                    <th class="bg-primary-subtle" scope="col">Giới tính</th>
+                    <th class="bg-primary-subtle" scope="col">Ngày sinh</th>
+                    <th class="bg-primary-subtle" scope="col">Địa chỉ</th>
+                    <th class="bg-primary-subtle" scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a: ${accounts}" th:onclick="'select('+${a.id}+')'">
+                    <td th:utext="${a.information.fullName}"></td>
+                    <td th:utext="${a.email}"></td>
+                    <td th:utext="${a.information.phoneNumber}"></td>
+                    <td th:utext="${a.information.gender}"></td>
+                    <td th:utext="${a.information.dob}"></td>
+                    <td th:utext="${a.information.address}"></td>
+                    <td th:if="${a.role.name() != 'ROLE_ADMIN'}">
+                        <a th:href="@{/admin/account/{id}(id=${a.id})}"
+                           role="button"
+                           class="me-2 btn btn-outline-primary px-2 py-0">Xem</a>
+                        <a th:onclick="'deleteById('+${a.id}+')'"
+                           href="#" id="accounts" role="button"
+                           data-bs-toggle="modal"
+                           class="btn btn-outline-danger px-2 py-0"
+                           data-bs-target="#deleteById">
+                            Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <nav th:if="${searchResp.massage == null}" aria-label="Page navigation example">
+                <ul class="pagination d-flex justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:with="id=(${searchResp.pageNumber > 1 ? searchResp.pageNumber - 1 : 1})"
+                           th:href="@{/admin/accounts(pageNumber=${id},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}">
+                            <<
+                        </a>
+                    </li>
+                    <li class="page-item" th:each="e: ${searchResp.pageMax}">
+                        <a class="page-link"
+                           th:href="@{/admin/accounts(pageNumber=${e},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}"
+                           th:classappend="${searchResp.pageNumber == e ? 'text-danger' : ''}" th:utext="${e}">
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:with="id=(${searchResp.pageNumber < searchResp.pageMax.size() ? searchResp.pageNumber + 1 : searchResp.pageNumber})"
+                           th:href="@{/admin/accounts(pageNumber=${id},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}">
+                            >>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" id="addUser" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="min-width: 800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Thêm người dùng mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/admin/accounts}" method="post" th:object="${accountReq}">
+                        <div>
+                            <label>Họ và tên:</label>
+                            <input type="text" th:field="*{fullName}" class="form-control"
+                                   placeholder="Nhập họ và tên...">
+                            <!--                            <p th:if="${#fields.hasErrors('accountInformationDto.fullName')}" class="text-danger" th:errors="*{accountInformationDto.fullName}"></p>-->
+                        </div>
+                        <div th:if="${#fields.hasAnyErrors()}">
+                            <ul>
+                                <li th:each="err : ${#fields.errors()}" th:utext="${err}"></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <label>Số điện thoại:</label>
+                            <input type="text" class="form-control" th:field="*{phoneNumber}"
+                                   placeholder="Nhập số điện thoại..." required>
+                            <!--                            <p th:if="${#fields.hasErrors('accountInformationDto.phoneNumber')}" class="text-danger" th:errors="*{accountInformationDto.phoneNumber}"></p>-->
+                        </div>
+                        <div>
+                            <label>Ngày sinh:</label>
+                            <input type="date" class="form-control" th:field="*{dob}" required>
+                            <!--                            <p th:if="${#fields.hasErrors('dob')}" class="text-danger" th:errors="*{accountInformationDto.dob}"></p>-->
+                        </div>
+                        <div>
+                            <label class="d-block">Giới tính:</label>
+                            <div class="ps-4">
+                                <input type="radio" th:field="*{gender}" value="MALE"/>
+                                <label>Nam</label>
+                                <input type="radio" th:field="*{gender}" value="FEMALE"/>
+                                <label>Nữ</label>
+                                <input type="radio" th:field="*{gender}" value="OTHER"/>
+                                <label>Khác</label>
+                            </div>
+                            <!--                            <p th:if="${#fields.hasErrors('gender')}" class="text-danger" th:errors="*{gender}"></p>-->
+                        </div>
+
+                        <div>
+                            <label>Email:</label>
+                            <input type="email" class="form-control" th:field="*{email}"
+                                   placeholder="Nhập email...">
+                            <!--                            <p th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></p>-->
+                        </div>
+                        <div>
+                            <label>Mật khẩu:</label>
+                            <input type="password" class="form-control" th:field="*{password}"
+                                   placeholder="Nhập mật khẩu..." required>
+                            <!--                            <p th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></p>-->
+                        </div>
+                        <div>
+                            <label>Địa chỉ:</label>
+                            <textarea th:field="*{address}" class="form-control" rows="2"
+                                      placeholder="Nhập địa chỉ"></textarea>
+                        </div>
+                        <div>
+                            <label>Role</label>
+                            <select th:field="*{role}" class="form-select">
+                                <option th:value="ROLE_USER" selected>USER</option>
+                                <option th:value="ROLE_ADMIN">ADMIN</option>
+                            </select>
+                        </div>
+                        <div class="py-2 float-end">
+                            <button class="btn btn-outline-warning" type="reset">
+                                Làm mới
+                            </button>
+                            <button class="btn btn-outline-success " type="submit">
+                                Thêm
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function select(id) {
+            window.location.href = "http://localhost:8080/admin/account/" + id;
+        }
+    </script>
+</div>
+
+
+</body>
+</html>

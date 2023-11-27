@@ -1,0 +1,60 @@
+﻿<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/ui}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content">
+    <section class="container d-flex justify-content-center mt-5" style="max-height: 350px">
+        <div class="bg-white shadow rounded p-3 col-4 ">
+            <div class="mt-5 px-4">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="mb-4">
+                            <h5 class="text-center"> CHI TIẾT THANH TOÁN</h5>
+                        </div>
+                        <div class="modal-body d-flex flex-row justify-content-center">
+                            <div class="">
+                                <img th:src="@{/files/images/{id}/{name}(id=${story.id},name=${story.thumbnail})}"
+                                     width="100px" height="auto"
+                                     class="border border-2 bg-dark-subtle p-1">
+                            </div>
+                            <div class="p-3 ms-3 d-flex flex-column justify-content-center">
+                                <div class="d-flex flex-row align-items-center mb-2">
+                                    <h6 class="m-0" style="min-width: 100px"> Tên:</h6>
+                                    <a th:href="@{/story/{id}(id=${story.id})}"
+                                       class="text-decoration-none"
+                                       th:utext="${story.name}"></a>
+                                </div>
+                                <div class="d-flex flex-row align-items-center" th:if="${story.type == true}">
+                                    <h6 class="m-0" style="min-width: 100px"> Tiền phí:</h6>
+                                    <span th:utext="${story.money}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer"  th:if="${message == null}">
+                            <a th:href="@{/story/{id}(id=${story.id})}"
+                               class="btn btn-outline-secondary me-3"
+                            >
+                                Quay lại
+                            </a>
+                            <a th:href="@{${vnPayResp.url}}"
+                               class="btn btn-outline-success"
+                            >
+                                Đồng Ý
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h5 th:if="${message != null}" th:utext="${message}" class="text-center mt-3 text-primary-emphasis"></h5>
+        </div>
+
+    </section>
+
+</div>
+</body>
+</html>

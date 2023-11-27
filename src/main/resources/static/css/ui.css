@@ -1,0 +1,63 @@
+﻿input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.hoverGenre, .storyHover{
+    opacity: 1;
+}
+.hoverGenre:hover, .storyHover:hover{
+    opacity: 0.5;
+}
+
+.storiesFull{
+    width: 50px;
+    height: 20px;
+    top:10px;
+    left: 0;
+}
+
+
+table td,
+table th {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+thead th {
+    color: #fff;
+}
+
+.card {
+    border-radius: .5rem;
+}
+
+.table-scroll {
+    border-radius: .5rem;
+}
+
+.table-scroll table thead th {
+    font-size: 1.25rem;
+}
+thead {
+    top: 0;
+    position: sticky;
+}
+
+/*css login*/
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+.h-custom {
+    height: calc(100% - 73px);
+}
+@media (max-width: 450px) {
+    .h-custom {
+        height: 100%;
+    }
+}

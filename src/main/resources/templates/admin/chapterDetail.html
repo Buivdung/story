@@ -1,0 +1,101 @@
+﻿<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-10" id="upTop">
+        <div class="bg-white shadow rounded p-3 mb-3 text-center">
+            <h3 th:utext="${chapter.stories.name}"></h3>
+        </div>
+        <div class="bg-white shadow rounded p-3 mb-3 text-center">
+            <h6 th:utext="${'Chương: '+  chapter.number}"></h6>
+            <form th:action="@{/admin/{storyId}/chapter/{id}(storyId=${chapter.stories.id},id=${id})}"
+                  method="post"
+                  th:object="${chapterReq}">
+                <div class="position-relative">
+                    <div class="d-flex justify-content-center">
+                    <input type="text" id="title" class="form-control w-50 text-center me-4" name="title" th:value="${chapter.title}">
+                    </div>
+                    <input type="submit" class="btn btn-outline-success position-absolute" style="bottom: 0; right: 0" value="Lưu">
+                </div>
+            </form>
+        </div>
+        <div class="bg-white shadow rounded px-5 py-3 mb-3">
+            <div class="d-flex align-items-start justify-content-end">
+                <form class="w-50" id="editContent"
+                      th:action="@{/admin/{storyId}/content/{id}(storyId=${chapter.stories.id},id=${chapter.id})}"
+                      method="post"
+                      enctype="multipart/form-data">
+                    <input type="file" class="form-control my-2" name="content">
+                    <div class="float-end">
+                        <input type="button" class="btn btn-outline-secondary  ms-3" onclick="closeEdit()" value="Đóng">
+                        <input type="submit" class="btn btn-outline-primary " value="Lưu">
+                    </div>
+                </form>
+                <a href="#" role="button" class="btn btn-outline-primary mt-2 ms-2" onclick="editContent()">
+                    <i class="fa-solid fa-pencil"></i>
+                </a>
+            </div>
+
+            <nav th:if="ids != null" class="mt-3" aria-label="Page navigation example">
+                <ul class="pagination d-flex justify-content-center">
+                    <li class="page-item">
+                        <input type="hidden" id="idPrev"
+                               th:with="i =${ids.indexOf(chapter.id) > 1 ? ids.indexOf(chapter.id) - 1 : 0}"
+                               th:value="${ids.get(i)}">
+                        <button class="page-link chapterIdPrev"
+                                th:disabled="${ids.indexOf(chapter.id) == 0}"> <<
+                        </button>
+                    </li>
+                    <li class="page-item">
+                        <select class="form-select rounded-0 text-primary"
+                                id="chapterId"
+                                th:href="@{/admin}">
+                            <option class="page-link p-2"
+                                    th:value="${id}"
+                                    th:utext="${i.count}"
+                                    th:selected="${chapter.number == i.count}"
+                                    th:each="id,i :${ids}"
+                            >
+                            </option>
+                        </select>
+                    </li>
+                    <li class="page-item">
+                        <input type="hidden" id="idNext"
+                               th:with="i =${ids.indexOf(chapter.id) < ids.size() - 1 ? ids.indexOf(chapter.id) + 1 : ids.size() - 1}"
+                               th:value="${ids.get(i)}">
+                        <button class="page-link chapterIdNext"
+                                th:disabled="${ids.indexOf(chapter.id) == ids.size() - 1}"> >>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            <p th:each="l :${lines}" th:utext="${l}"></p>
+            <nav th:if="ids != null" aria-label="Page navigation example">
+                <ul class="pagination d-flex justify-content-center">
+                    <li class="page-item">
+                        <button class="page-link chapterIdPrev"
+                                th:disabled="${ids.indexOf(chapter.id) == 0}"> <<
+                        </button>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#upTop"> ^
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <button class="page-link chapterIdNext"
+                                th:disabled="${ids.indexOf(chapter.id) == ids.size() - 1}"> >>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>

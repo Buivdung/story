@@ -1,0 +1,63 @@
+2023-10-07T01:16:34.893+07:00  INFO 6448 --- [restartedMain] fa.hust.MangaApplication                 : Starting MangaApplication using Java 17.0.7 with PID 6448 (D:\Spring\manga\target\classes started by Administrator in D:\Spring\manga)
+2023-10-07T01:16:34.898+07:00 DEBUG 6448 --- [restartedMain] fa.hust.MangaApplication                 : Running with Spring Boot v3.1.4, Spring v6.0.12
+2023-10-07T01:16:34.899+07:00  INFO 6448 --- [restartedMain] fa.hust.MangaApplication                 : No active profile set, falling back to 1 default profile: "default"
+2023-10-07T01:16:34.940+07:00  INFO 6448 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-10-07T01:16:34.940+07:00  INFO 6448 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-10-07T01:16:35.521+07:00  INFO 6448 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-07T01:16:35.545+07:00  INFO 6448 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 0 JPA repository interfaces.
+2023-10-07T01:16:36.205+07:00  INFO 6448 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-10-07T01:16:36.206+07:00  INFO 6448 --- [restartedMain] o.a.catalina.core.AprLifecycleListener   : An older version [1.2.37] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2023-10-07T01:16:36.206+07:00  INFO 6448 --- [restartedMain] o.a.catalina.core.AprLifecycleListener   : Loaded Apache Tomcat Native library [1.2.37] using APR version [1.7.4].
+2023-10-07T01:16:36.209+07:00  INFO 6448 --- [restartedMain] o.a.catalina.core.AprLifecycleListener   : OpenSSL successfully initialized [OpenSSL 1.1.1u  30 May 2023]
+2023-10-07T01:16:36.216+07:00  INFO 6448 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-10-07T01:16:36.217+07:00  INFO 6448 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-10-07T01:16:36.277+07:00  INFO 6448 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-10-07T01:16:36.277+07:00  INFO 6448 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1336 ms
+2023-10-07T01:16:36.463+07:00  INFO 6448 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-07T01:16:36.515+07:00  INFO 6448 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-10-07T01:16:36.517+07:00  INFO 6448 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-10-07T01:16:36.651+07:00  INFO 6448 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-07T01:16:36.785+07:00  INFO 6448 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-10-07T01:16:36.801+07:00  INFO 6448 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-10-07T01:16:37.064+07:00  INFO 6448 --- [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection ConnectionID:1 ClientConnectionId: b5abbf8e-912e-4cae-8f1d-244b4e25e339
+2023-10-07T01:16:37.066+07:00  INFO 6448 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-10-07T01:16:37.091+07:00  WARN 6448 --- [restartedMain] org.hibernate.orm.deprecation            : HHH90000026: SQLServer2012Dialect has been deprecated; use org.hibernate.dialect.SQLServerDialect instead
+2023-10-07T01:16:37.179+07:00  INFO 6448 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-07T01:16:37.390+07:00  INFO 6448 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-07T01:16:37.395+07:00  INFO 6448 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-07T01:16:37.446+07:00  WARN 6448 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-10-07T01:16:37.466+07:00  WARN 6448 --- [restartedMain] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 6c20cd34-6c16-4b9e-85b2-8aa4b1b25a64
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2023-10-07T01:16:37.557+07:00  INFO 6448 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@55b5f71, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4ead0221, org.springframework.security.web.context.SecurityContextHolderFilter@570df621, org.springframework.security.web.header.HeaderWriterFilter@23f589a, org.springframework.security.web.authentication.logout.LogoutFilter@23ca1f22, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@777435e1, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@41fcd77, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4a0952d4, org.springframework.security.web.access.ExceptionTranslationFilter@7de22bf, org.springframework.security.web.access.intercept.AuthorizationFilter@6f9b89b]
+2023-10-07T01:16:37.686+07:00 DEBUG 6448 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2023-10-07T01:16:37.723+07:00  INFO 6448 --- [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2023-10-07T01:16:37.769+07:00 DEBUG 6448 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 3 mappings in 'requestMappingHandlerMapping'
+2023-10-07T01:16:37.789+07:00 DEBUG 6448 --- [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2023-10-07T01:16:37.797+07:00 DEBUG 6448 --- [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2023-10-07T01:16:37.936+07:00  INFO 6448 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-10-07T01:16:37.971+07:00  INFO 6448 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-10-07T01:16:37.982+07:00  INFO 6448 --- [restartedMain] fa.hust.MangaApplication                 : Started MangaApplication in 3.464 seconds (process running for 4.063)
+2023-10-07T01:16:54.895+07:00  INFO 6448 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-10-07T01:16:54.895+07:00  INFO 6448 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-10-07T01:16:54.895+07:00 DEBUG 6448 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2023-10-07T01:16:54.895+07:00 DEBUG 6448 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2023-10-07T01:16:54.896+07:00 DEBUG 6448 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2023-10-07T01:16:54.897+07:00 DEBUG 6448 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@734a1ed
+2023-10-07T01:16:54.897+07:00 DEBUG 6448 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@2c067e17
+2023-10-07T01:16:54.897+07:00 DEBUG 6448 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2023-10-07T01:16:54.897+07:00  INFO 6448 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2023-10-07T01:16:54.913+07:00 DEBUG 6448 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2023-10-07T01:16:54.923+07:00 DEBUG 6448 --- [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to fa.hust.controllers.IndexController#index()
+2023-10-07T01:16:54.970+07:00  INFO 6448 --- [http-nio-8080-exec-1] fa.hust.controllers.IndexController      : Hello
+2023-10-07T01:16:54.978+07:00 DEBUG 6448 --- [http-nio-8080-exec-1] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/avif, image/webp, image/apng, application/xml;q=0.9, */*;q=0.8, application/signed-exchange;v=b3;q=0.7]
+2023-10-07T01:16:55.136+07:00 DEBUG 6448 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2023-10-07T01:17:46.528+07:00  INFO 6448 --- [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2023-10-07T01:17:46.536+07:00  INFO 6448 --- [Thread-5] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2023-10-07T01:17:46.537+07:00  INFO 6448 --- [Thread-5] o.a.c.c.C.[Tomcat].[localhost].[/]       : Destroying Spring FrameworkServlet 'dispatcherServlet'
+2023-10-07T01:17:46.544+07:00  INFO 6448 --- [Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-10-07T01:17:46.546+07:00  INFO 6448 --- [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-10-07T01:17:46.551+07:00  INFO 6448 --- [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

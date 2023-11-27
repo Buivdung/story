@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-10">
+        <div class="bg-white shadow rounded p-3 mb-3 text-center h2" style="color: #0dcaf0">
+            Danh sách thể loại
+        </div>
+        <div th:if="${searchResp.alert}" tabindex="-1" class="text-center pt-4 alert alert-primary" role="alert" id="alertCustom" th:utext="${searchResp.alert}"></div>
+        <div class="d-flex flex-row justify-content-between">
+            <div class="col-6 shadow bg-white p-3 rounded">
+                <div class="row">
+                    <form class="d-flex col-12" method="get" th:action="@{/admin/genres}">
+                        <div class="col-3 d-flex align-content-center me-2">
+                            <button class="btn btn-outline-secondary" disabled>Show:</button>
+                            <select name="pageSize" id="pageSize" class="form-select ms-2">
+                                <option th:selected="${searchResp.pageSize == 5}" value="5">5</option>
+                                <option th:selected="${searchResp.pageSize == 10}" value="10">10</option>
+                                <option th:selected="${searchResp.pageSize == 15}" value="15">15</option>
+                                <option th:selected="${searchResp.pageSize == 20}" value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="col-9 d-flex">
+                            <input class="form-control me-2" name="param" th:value="${searchResp.param}"
+                                   placeholder="Tìm kiếm thể loại "
+                                   aria-label="Search">
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <h6 class="text-danger text-center pt-4" th:if="${searchResp.massage != null}" th:utext="${searchResp.massage}"></h6>
+                <table th:if="${searchResp.massage == null}" class="table my-3 table-hover text-center">
+                    <thead>
+                    <tr>
+                        <th class="bg-primary-subtle" scope="col">Stt</th>
+                        <th class="bg-primary-subtle" scope="col">Tên</th>
+                        <th class="bg-primary-subtle" scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="g,i : ${genres}">
+                        <td th:utext="${i.count}"></td>
+                        <td th:utext="${g.name}"></td>
+                        <td>
+                            <a href="#" th:onclick="'editGenreById('+${g.id}+')'"
+                               role="button"
+                               class="me-2 btn btn-outline-primary px-2 py-0"
+                            >
+                                Sửa
+                            </a>
+                            <a th:onclick="'deleteById('+${g.id}+')'"
+                               href="#" id="genres"
+                               role="button"
+                               class="btn btn-outline-danger px-2 py-0"
+                               data-bs-toggle="modal"
+                               data-bs-target="#deleteById">
+                                Xóa</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <nav th:if="${searchResp.massage == null}" aria-label="Page navigation example">
+                    <ul class="pagination d-flex justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link"
+                               th:with="id=(${searchResp.pageNumber > 1 ? searchResp.pageNumber - 1 : 1})"
+                               th:href="@{/admin/genres(pageNumber=${id},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}">
+                                <<
+                            </a>
+                        </li>
+                        <li class="page-item" th:each="e: ${searchResp.pageMax}">
+                            <a class="page-link"
+                               th:href="@{/admin/genres(pageNumber=${e},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}"
+                               th:classappend="${searchResp.pageNumber == e ? 'text-danger' : ''}" th:utext="${e}">
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               th:with="id=(${searchResp.pageNumber < searchResp.pageMax.size() ? searchResp.pageNumber + 1 : searchResp.pageNumber})"
+                               th:href="@{/admin/genres(pageNumber=${id},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}">
+                                >>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-5 shadow bg-white p-3 rounded" style="max-height: 250px">
+                <H5 class="text-primary-emphasis text-center"> Thêm mới thể loại</H5>
+                <form th:action="@{/admin/genres}" method="post" th:object="${genreReq}">
+                    <div>
+                        <input type="hidden" th:field="*{id}">
+                        <label>Tên thể loại:</label>
+                        <input type="text" th:field="*{name}" class="form-control my-2"
+                               placeholder="Nhập thể loại" required>
+                        <p th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{name}"></p>
+                    </div>
+                    <div class="py-2 float-end">
+                        <button class="btn btn-outline-success " type="submit">
+                            Lưu
+                        </button>
+                    </div>
+               </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="deleteById" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Bạn có muốn xóa thể loại này này? </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="delete-button">
+                    <div class="py-2">
+                        <button class="btn btn-warning text-white" type="reset"><i
+                                class="fa-solid fa-rotate-right text-white"></i> Làm mới
+                        </button>
+                        <button class="btn btn-success " type="submit"><i class="fa-solid fa-plus text-white"></i>
+                            Thêm
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

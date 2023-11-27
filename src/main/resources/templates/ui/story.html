@@ -1,0 +1,161 @@
+﻿<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      layout:decorate="~{layout/ui}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content" class="container-fluid py-3">
+    <div class="bg-white shadow rounded p-3 container">
+        <h3 th:utext="${story.name}" class="text-center text-primary-emphasis my-2"></h3>
+        <div class="d-flex">
+            <div class="col-4">
+                <div class="d-flex justify-content-center">
+                    <img th:src="@{/files/images/{id}/{name}(id=${story.id},name=${story.thumbnail})}"
+                         class="border border-5 bg-dark-subtle p-1">
+                </div>
+                <div class="p-3 ms-3">
+                    <div class="d-flex flex-row align-items-center">
+                        <h6 class="m-0" style="min-width: 100px"> Tác giả:</h6>
+                        <span th:utext="${story.author}"></span>
+                    </div>
+                    <div class="d-flex flex-row align-items-center">
+                        <h6 class="m-0" style="min-width: 100px"> Thể loại:</h6>
+                        <span th:each="g,i : ${story.storiesGenres}"
+                              th:utext="${g.genre.name + ', '}"
+                              class="me-2"
+                              th:if="${i.count != story.storiesGenres.size()}">
+                        </span> <span th:each="g,i : ${story.storiesGenres}"
+                                      th:utext="${g.genre.name}"
+                                      th:if="${i.count == story.storiesGenres.size()}">
+                        </span>
+                    </div>
+                    <div class="d-flex flex-row align-items-center">
+                        <h6 class="m-0" style="min-width: 100px"> Trạng thái: </h6>
+                        <span th:utext="${story.status.name()}"></span>
+                    </div>
+                    <div class="d-flex flex-row align-items-center">
+                        <h6 class="m-0" style="min-width: 100px"> Trả phí:</h6>
+                        <span th:utext="${story.type == true ? 'Có': 'Kh4ng'}"></span>
+                    </div>
+                    <div class="d-flex flex-row align-items-center" th:if="${story.type == true}">
+                        <h6 class="m-0" style="min-width: 100px"> Tiền phí:</h6>
+                        <span th:utext="${story.money}"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8 p-3 border-start">
+                <h6> Tóm tắt truyện</h6>
+                <div>
+                    <p th:each="l : ${lines}" th:utext="${l}"></p>
+                </div>
+            </div>
+        </div>
+        <div th:if="${paid == true || !story.type || (#ctx.session.account.role != null && #ctx.session.account.role.name() == 'ROLE_ADMIN')} ">
+            <h5 class="text-secondary border-bottom text-center p-3"> Danh Sách Chương</h5>
+            <div class="row px-5 py-3 mx-5">
+                <a th:href="@{/{storyId}/chapter/{id}(storyId=${story.id},id=${c.id})}"
+                   class="col-6 ps-5 my-1"
+                   th:each="c : ${chapters}"
+                   th:utext="${'Chương ' + c.number + ' : ' + c.title}">
+                </a>
+            </div>
+            <div>
+                <nav th:if="${searchResp.massage == null}" aria-label="Page navigation example">
+                    <ul class="pagination d-flex justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link"
+                               th:with="number=(${searchResp.pageNumber > 1 ? searchResp.pageNumber - 1 : 1})"
+                               th:href="@{/story/{id}
+                           (id=${story.id},pageNumber=${number},
+                           param=(${searchResp.param}),
+                           pageSize=(${searchResp.pageSize}))}">
+                                <<
+                            </a>
+                        </li>
+                        <li class="page-item" th:each="e: ${searchResp.pageMax}">
+                            <a class="page-link"
+                               th:href="@{/story/{id}(id=${story.id},pageNumber=${e},
+                           param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}"
+                               th:classappend="${searchResp.pageNumber == e ? 'text-danger' : ''}" th:utext="${e}">
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               th:with="number=(${searchResp.pageNumber < searchResp.pageMax.size() ?
+                           searchResp.pageNumber + 1 : searchResp.pageNumber})"
+                               th:href="@{/story/{id}(id=${story.id},pageNumber=${number},
+                           param=(${searchResp.param}),
+                           pageSize=(${searchResp.pageSize}))}">
+                                >>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div th:if="${paid == false && story.type && (#ctx.session.account.role == null || #ctx.session.account.role.name() == 'ROLE_USER')}"
+             class="text-center my-3">
+            <span>Truyện cần trả phí để đọc</span>
+            <a class="btn btn-outline-secondary"
+               th:href="@{/create_pay/{id}(id=${story.id})}"> trả phí
+            </a>
+        </div>
+    </div>
+    <div class="bg-white shadow rounded p-3 mt-3 container">
+        <div class="mx-5 px-5" sec:authorize="isAuthenticated()">
+            <div class="card-footer p-3 border-0" style="background-color: #f8f9fa;">
+                <form id="comment">
+                    <div class="d-flex flex-start w-100">
+                        <img class="rounded-circle shadow-1-strong me-3"
+                             th:src="@{/files/avatar/{avatar}(avatar=${#ctx.session.account.information.avatar})}"
+                             alt="avatar" width="40"
+                             height="40"/>
+                        <div class="form-outline w-100">
+                            <input type="hidden" name="storyId" th:value="${story.id}">
+                            <input type="hidden" name="accountId" th:value="${#ctx.session.account.id}">
+                            <textarea class="form-control" name="comment" id="textCmt" rows="4"
+                                      style="background: #fff;"></textarea>
+                            <label class="form-label" for="textCmt">Nội dung</label>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-2 pt-1">
+                        <button type="submit" id="postComment" class="btn btn-primary me-2 btn-sm">Bình luận</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm">Thoát</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="mx-5 px-5" th:if="${comments.getNumberOfElements() > 0}">
+            <div class="d-flex flex-start mt-4 py-3 border-bottom " th:each="cmt : ${comments}">
+                <a class="me-3" href="#">
+                    <img class="rounded-circle shadow-1-strong"
+                         th:src="@{/files/avatar/{avatar}(avatar=${cmt.account.information.avatar})}" alt="avatar"
+                         width="65" height="65"/>
+                </a>
+                <div class="flex-grow-1 flex-shrink-1">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p class="mb-1" th:utext="${cmt.account.information.fullName}">
+                            </p>
+                        </div>
+                        <p class="small mb-0" th:utext="${cmt.comment}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end my-2">
+                <a th:href="@{/story/{id}(id=${story.id},sizeCmt=${comments.size + 10})}"
+                   class="text-decoration-none"> >> Xem thêm <<</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

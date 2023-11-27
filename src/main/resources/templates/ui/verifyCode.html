@@ -1,0 +1,78 @@
+﻿<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/ui}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content">
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="col-4 border rounded p-3 bg-white shadow">
+            <div th:if="${message != null}">
+                <h5 th:utext="${message}" class="text-center text-primary-emphasis"></h5>
+                <div class="d-flex mt-3 align-items-center">
+                    <h6 class="m-0">Hay đăng nhập để trải nghiệp web</h6>
+                    <a th:href="@{/login}" class="text-danger ms-2">Đăng nhập ngay.</a>
+                </div>
+            </div>
+            <div th:if="${message == null}">
+                <h4>Chúng tôi đã gửi một mã xác nhận đến email của bạn!</h4>
+                <span>Hay kiểm tra email...</span>
+                <form method="post"
+                      th:href="@{/verify/{id}(id=${acc.id})}"
+                      class="flex-column d-flex align-items-center">
+                    <div>
+                        <input type="number"
+                               min="0"
+                               max="9"
+                               maxlength="1"
+                               autofocus
+                               name="numberOne"
+                               class="autoFocus px-2 py-1 rounded text-center border">
+                        <input type="number"
+                               min="0"
+                               max="9"
+                               maxlength="1"
+                               name="numberTwo"
+                               class="autoFocus px-2 py-1 rounded text-center border">
+                        <input type="number"
+                               min="0"
+                               max="9"
+                               maxlength="1"
+                               name="numberThree"
+                               class="autoFocus px-2 py-1 rounded text-center border">
+                        <input type="number"
+                               min="0"
+                               max="9"
+                               maxlength="1"
+                               name="numberFour"
+                               class="autoFocus px-2 py-1 rounded text-center border">
+                        <input type="number"
+                               min="0"
+                               max="9"
+                               maxlength="1"
+                               name="numberFive"
+                               class="autoFocus px-2 py-1 rounded text-center border">
+                        <input type="number"
+                               min="0"
+                               max="9"
+                               maxlength="1"
+                               name="numberSix"
+                               class="autoFocus px-2 py-1 rounded text-center border">
+                    </div>
+                    <button type="submit" class="btn btn-outline-success d-block mt-3">Xác nhận</button>
+                </form>
+                <h6 th:utext="${error}" class="text-danger"></h6>
+                <div class="d-flex mt-3 align-items-center">
+                    <h6 class="m-0">Bạn chưa nhận được mã?</h6>
+                    <a th:href="@{/verify/{id}(id=${acc.id})}" class="text-danger ms-2">Gửi mã mới.</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

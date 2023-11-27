@@ -1,0 +1,132 @@
+﻿<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-10">
+        <div class="bg-white shadow rounded p-3 mb-3 text-center h2" style="color: #0dcaf0">
+            Thống kê
+        </div>
+        <div class="d-flex justify-content-between">
+            <a th:href="@{/admin/stories}"
+               class="statistical col-3-3 shadow rounded p-3 mb-3
+                     d-flex flex-column justify-content-around text-decoration-none"
+               style="height: 200px;">
+                <div class="text-center">
+                    <i class="fa-solid fa-book-tanakh me-2"
+                       style="font-size: 60px"></i>
+                    <span class="ms-5" style="font-size: 60px" th:utext="${full}"></span>
+                </div>
+                <H6 class="text-center">Truyện đã hoàn thành</H6>
+            </a>
+            <a th:href="@{/admin/stories}"
+               class="statistical col-3-3 shadow rounded p-3 mb-3
+                    d-flex flex-column justify-content-around text-decoration-none"
+               style="height: 200px">
+                <div class="text-center">
+                    <i class="fa-solid fa-book-tanakh me-2"
+                       style="font-size: 60px"></i>
+                    <span class="ms-5" style="font-size: 60px" th:utext="${pending}"></span>
+                </div>
+                <H6 class="text-center">Truyện chưa hoàn thành</H6>
+            </a>
+            <a th:href="@{/admin/accounts}"
+               class="statistical col-3-3 shadow rounded p-3 mb-3
+            d-flex flex-column justify-content-around text-decoration-none"
+               style="height: 200px">
+                <div class="text-center">
+                    <i class="fa-regular fa-user me-2 "
+                       style="font-size: 60px"></i>
+                    <span class="ms-5" style="font-size: 60px" th:utext="${account}"></span>
+                </div>
+                <H6 class="text-center">Người dùng</H6>
+            </a>
+            <a th:href="@{/admin/payment}"
+               class="statistical col-3-3 shadow rounded p-3 mb-3
+            d-flex flex-column justify-content-around text-decoration-none"
+               style="height: 200px">
+                <div class="text-center">
+                    <i class="fa-solid fa-dollar-sign me-1"
+                       style="font-size: 60px"></i>
+                    <span class="" style="font-size: 60px" th:utext="${totalAmount}"></span>
+                </div>
+                <H6 class="text-center">Doanh thu</H6>
+            </a>
+        </div>
+        <div class="mb-3 text-center">
+            <div class="d-flex justify-content-between py-3">
+                <div class="col-6 bg-white shadow rounded">
+                    <h6 class="text-center my-2" style="color: #0dcaf0">Dánh sách truyện bán nhiều nhất</h6>
+
+                    <table class="table my-3 table-hover text-center">
+                        <thead>
+                        <tr>
+                            <th class="bg-primary-subtle" scope="col">Stt</th>
+                            <th class="bg-primary-subtle" scope="col">Tên truyện</th>
+                            <th class="bg-primary-subtle" scope="col">Số chương</th>
+                            <th class="bg-primary-subtle" scope="col">Trạng thái</th>
+                            <th class="bg-primary-subtle" scope="col">Lượt bán</th>
+                            <th class="bg-primary-subtle" scope="col">Danh thu</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="t,i : ${totalMonies}" th:onclick="'selectStory('+${t.storyId}+')'">
+                            <td th:utext="${i.count}"></td>
+                            <td th:each="s : ${storiesList}"
+                                th:if="${s.id == t.storyId}"
+                                th:utext="${s.name}"
+                            ></td>
+                            <td th:each="s : ${storiesList}"
+                                th:if="${s.id == t.storyId}"
+                                th:utext="${s.chapterTotal}"
+                            ></td>
+                            <td th:each="s : ${storiesList}"
+                                th:if="${s.id == t.storyId}"
+                                th:utext="${s.status}"
+                            ></td>
+                            <td th:utext="${t.count}"></td>
+                            <td th:utext="${t.total}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-5 bg-white shadow rounded">
+                    <h6 class="text-center my-2" style="color: #0dcaf0">Danh sách độc giả thanh toán gần nhất</h6>
+                    <table class="table my-3 table-hover text-center">
+                        <thead>
+                        <tr>
+                            <th class="bg-primary-subtle" scope="col">Stt</th>
+                            <th class="bg-primary-subtle" scope="col">Tên người</th>
+                            <th class="bg-primary-subtle" scope="col">Email</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="ac,i :${accounts}" th:onclick="'selectUser('+${ac.id}+')'">
+                            <td th:utext="${i.count}"></td>
+                            <td th:utext="${ac.information.fullName}"></td>
+                            <td th:utext="${ac.email}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function selectStory(id) {
+            window.location.href = "http://localhost:8080/admin/story/" + id;
+        }
+        function selectUser(id) {
+            window.location.href = "http://localhost:8080/admin/account/" + id;
+        }
+    </script>
+</div>
+
+
+</body>
+</html>

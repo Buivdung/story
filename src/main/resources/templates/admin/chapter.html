@@ -1,0 +1,136 @@
+﻿<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-10">
+        <div class="bg-white shadow rounded mb-3 d-flex justify-content-around">
+            <div class="p-3 text-center col-6">
+                <a th:href="@{/admin/story/{id}(id=${storyId})}"
+                   class=" text-decoration-none h2" style="color: #0dcaf0">Thông tin truyện</a>
+            </div>
+            <div class="p-3 text-center rounded bg-primary-subtle col-6">
+                <a th:href="@{/admin/{storyId}/chapters(storyId=${storyId})}"
+                   class="text-center text-decoration-none h2" style="color: #0dcaf0">Danh sách chương</a>
+            </div>
+        </div>
+        <div class="mb-3 text-center">
+            <div class="d-flex flex-row justify-content-between">
+                <div class="col-6 shadow bg-white p-3 rounded">
+                    <H5 class="text-primary-emphasis text-center"> Danh sách chương</H5>
+                    <div class="row">
+                        <form class="d-flex col-12" method="get" th:action="@{/admin/genres}">
+                            <div class="col-3 d-flex align-content-center me-2">
+                                <button class="btn btn-outline-secondary" disabled>Show:</button>
+                                <select name="pageSize" id="pageSize" class="form-select ms-2">
+                                    <option th:selected="${searchResp.pageSize == 5}" value="5">5</option>
+                                    <option th:selected="${searchResp.pageSize == 10}" value="10">10</option>
+                                    <option th:selected="${searchResp.pageSize == 15}" value="15">15</option>
+                                    <option th:selected="${searchResp.pageSize == 20}" value="20">20</option>
+                                </select>
+                            </div>
+                            <div class="col-9 d-flex">
+                                <input class="form-control me-2" name="param" th:value="${searchResp.param}"
+                                       placeholder="Tìm kiếm thể loại "
+                                       aria-label="Search">
+                                <button class="btn btn-outline-primary" type="submit">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <h6 class="text-danger text-center pt-4" th:if="${searchResp.massage != null}"
+                        th:utext="${searchResp.massage}"></h6>
+                    <table th:if="${searchResp.massage == null}" class="table my-3 table-hover text-center">
+                        <thead>
+                        <tr>
+                            <th class="bg-primary-subtle" scope="col">Chương</th>
+                            <th class="bg-primary-subtle" scope="col">Tiêu đề</th>
+                            <th class="bg-primary-subtle" scope="col">Ngay đăng</th>
+                            <th class="bg-primary-subtle" scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="c,i : ${chapters}">
+                            <td th:utext="${c.number}"></td>
+                            <td class="text-start" th:utext="${c.title}"></td>
+                            <td th:utext="${c.createDate}"></td>
+
+                            <td>
+                                <a th:href="@{/admin/{storyId}/chapter/{id}(storyId=${storyId},id=${c.id})}"
+                                   class="me-2 btn btn-outline-primary px-2 py-0">Xem</a>
+                                <a th:onclick="'deleteById('+${c.id}+')'" href="#"
+                                   id="chapters"
+                                   role="button"
+                                   class="btn btn-outline-danger px-2 py-0"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#deleteById">Xóa</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <nav th:if="${searchResp.massage == null}" aria-label="Page navigation example">
+                        <ul class="pagination d-flex justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link"
+                                   th:with="id=(${searchResp.pageNumber > 1 ? searchResp.pageNumber - 1 : 1})"
+                                   th:href="@{/admin/genres(pageNumber=${id},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}">
+                                    <<
+                                </a>
+                            </li>
+                            <li class="page-item" th:each="e: ${searchResp.pageMax}">
+                                <a class="page-link"
+                                   th:href="@{/admin/genres(pageNumber=${e},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}"
+                                   th:classappend="${searchResp.pageNumber == e ? 'text-danger' : ''}" th:utext="${e}">
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link"
+                                   th:with="id=(${searchResp.pageNumber < searchResp.pageMax.size() ? searchResp.pageNumber + 1 : searchResp.pageNumber})"
+                                   th:href="@{/admin/genres(pageNumber=${id},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}">
+                                    >>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-5 shadow bg-white p-3 rounded" style="max-height: 400px">
+                    <H5 class="text-primary-emphasis text-center"> Thêm chương mới</H5>
+                    <button class="btn btn-outline-success" id="auto">Tự động</button>
+                    <button class="btn btn-outline-secondary ms-3" id="manual">Tuỳ chỉnh</button>
+                    <span id="storyId" class="d-none" th:utext="${storyId}"></span>
+                    <form th:action="@{/admin/{storyId}/chapters(storyId=${storyId})}" enctype="multipart/form-data"
+                          method="post" th:object="${chapterReq}">
+                        <div class="text-start">
+                            <input type="hidden" th:field="*{id}">
+                            <input type="hidden" th:value="${storyId}">
+                            <label>Chương số:</label>
+                            <input type="number" name="number" id="number" class="form-control my-2"
+                                   placeholder="Nhap so chương" required>
+                            <label>Tiêu đề chương:</label>
+                            <input type="text" name="title" class="form-control my-2"
+                                   placeholder="Nhập tiêu đề" required>
+                            <!--                            <p th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{title}"></p>-->
+                            <label>Nội dung chương:</label>
+                            <input type="file" name="content" class="form-control my-2" required>
+                            <!--                            <p th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{content}"></p>-->
+                        </div>
+                        <div class="py-2 float-end">
+                            <button class="btn btn-outline-success " type="submit">
+                                Lưu
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

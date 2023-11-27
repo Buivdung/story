@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-10">
+        <div class="bg-white shadow rounded p-3 mb-3 text-center h2" style="color: #0dcaf0">
+            Danh sách truyện
+        </div>
+        <div class="bg-white shadow rounded p-3">
+            <div th:if="${searchResp.alert}"
+                 class="text-center pt-4 alert alert-primary"
+                 role="alert" id="alertCustom" th:utext="${searchResp .alert}"></div>
+            <div class="bg-white">
+                <div class="row">
+                    <form class="d-flex col-10" method="get" th:action="@{/admin/stories}">
+                        <div class="col-3 d-flex align-content-cente me-3">
+                            <button class="btn btn-outline-secondary" disabled>Show:</button>
+                            <select name="pageSize" id="pageSize" class="form-select ms-2">
+                                <option th:selected="${searchResp.pageSize == 5}" value="5">5</option>
+                                <option th:selected="${searchResp.pageSize == 10}" value="10">10</option>
+                                <option th:selected="${searchResp.pageSize == 15}" value="15">15</option>
+                                <option th:selected="${searchResp.pageSize == 20}" value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="col-9 d-flex">
+                            <input class="form-control me-2" name="param" th:value="${searchResp.param}"
+                                   placeholder="Tìm kiếm truyện"
+                                   aria-label="Search">
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="col-2 text-center">
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addStory">
+                            <i class="fa-solid fa-plus"></i>
+                            Thêm
+                        </button>
+                    </div>
+                </div>
+                <h6 class="text-danger text-center pt-4" th:if="${searchResp.massage != null}"
+                    th:utext="${searchResp.massage}"></h6>
+                <table th:if="${searchResp.massage == null}" class="table my-3 table-hover text-center">
+                    <thead>
+                    <tr>
+                        <th class="bg-primary-subtle" scope="col">Stt</th>
+                        <th class="bg-primary-subtle" scope="col">Tên</th>
+                        <th class="bg-primary-subtle" scope="col">Tác giả</th>
+                        <th class="bg-primary-subtle" scope="col">Thể loại</th>
+                        <th class="bg-primary-subtle" scope="col">Số chương</th>
+                        <th class="bg-primary-subtle" scope="col">Trạng thái</th>
+                        <th class="bg-primary-subtle" scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="s,i : ${stories}" th:onclick="'select('+${s.id}+')'">
+                        <td th:utext="${i.count}"></td>
+                        <td th:utext="${s.name}" class="text-start"></td>
+                        <td th:utext="${s.author}"></td>
+                        <td>
+                            <span th:if="${j.count != s.storiesGenres.size()}"
+                                  th:each="g,j : ${s.getStoriesGenres()}"
+                                  th:utext="${g.getGenre().name + ', '}">
+                            </span>
+                            <span th:if="${j.count == s.storiesGenres.size()}"
+                                  th:each="g,j : ${s.getStoriesGenres()}"
+                                  th:utext="${g.getGenre().name}">
+                            </span>
+                        </td>
+                        <td th:utext="${s.chapterTotal}"></td>
+                        <td th:classappend="${s.status.name() == 'FULL' ? 'text-primary': 'text-warning'}"
+                            th:utext="${s.status}"></td>
+                        <td>
+                            <a th:href="@{/admin/story/{id}(id=${s.id})}"
+                               class="me-3 btn btn-outline-primary px-2 py-0"> Xem</a>
+                            <a href="#" th:onclick="'deleteById('+ ${s.id} +')'"
+                               id="stories"
+                               role="button"
+                               class="btn btn-outline-danger px-2 py-0"
+                               data-bs-toggle="modal"
+                               data-bs-target="#deleteById">Xóa</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <nav th:if="${searchResp.massage == null}" aria-label="Page navigation example">
+                    <ul class="pagination d-flex justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link"
+                               th:with="id=(${searchResp.pageNumber > 1 ? searchResp.pageNumber - 1 : 1})"
+                               th:href="@{/admin/stories(pageNumber=${id},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}">
+                                <<
+                            </a>
+                        </li>
+                        <li class="page-item" th:each="e: ${searchResp.pageMax}">
+                            <a class="page-link"
+                               th:href="@{/admin/stories(pageNumber=${e},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}"
+                               th:classappend="${searchResp.pageNumber == e ? 'text-danger' : ''}" th:utext="${e}">
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               th:with="id=(${searchResp.pageNumber < searchResp.pageMax.size() ? searchResp.pageNumber + 1 : searchResp.pageNumber})"
+                               th:href="@{/admin/stories(pageNumber=${id},param=(${searchResp.param}),pageSize=(${searchResp.pageSize}))}">
+                                >>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="modal" tabindex="-1" id="addStory" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="min-width: 800px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"> Thêm truyện mới</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/admin/stories}" method="post" th:object="${storyReq}"
+                              enctype="multipart/form-data">
+                            <input type="hidden" class="form-control" th:value="100" th:field="*{review}">
+                            <input type="hidden" class="form-control" th:value="100" th:field="*{chapterTotal}">
+                            <div>
+                                <label>Tên truyện:</label>
+                                <input type="text" class="form-control" th:field="*{name}" required>
+                            </div>
+                            <div>
+                                <label>Tác giả:</label>
+                                <input type="text" class="form-control" th:field="*{author}" required>
+                            </div>
+                            <div>
+                                <label>Ảnh nền:</label>
+                                <input type="file" class="form-control" th:field="*{thumbnail}">
+                            </div>
+                            <div>
+                                <label>Tóm tắt:</label>
+                                <input type="file" class="form-control" th:field="*{introduction}">
+                            </div>
+                            <div>
+                                <label>Thể loại:</label>
+                                <div class="d-flex flex-row flex-wrap">
+                                    <div th:each="g : ${genres}">
+                                        <input class="ms-3" type="checkbox" th:value="${g.id}" th:field="*{genreId}">
+                                        <label th:utext="${g.name}"></label>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div>
+                                <label class="d-block">Phân loại:</label>
+                                <input class="ms-3" type="checkbox" th:field="*{type}">
+                                <label> Trả phí</label>
+                            </div>
+                            <div>
+                                <label>Tiền phí</label>
+                                <input type="number" class="form-control" th:field="*{money}">
+                            </div>
+                            <input type="hidden" class="form-control" th:field="*{status}" th:value="FENDING">
+                            <div class="py-2 float-end">
+                                <button class="btn btn-outline-warning " type="reset">
+                                    Làm mới
+                                </button>
+                                <button class="btn btn-outline-success " type="submit">
+                                    Thêm
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function select(id) {
+            window.location.href = "http://localhost:8080/admin/story/" + id;
+        }
+    </script>
+</div>
+</body>
+</html>

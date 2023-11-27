@@ -1,0 +1,128 @@
+﻿<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/ui}"
+>
+<head th:replace="~{common/fragment::head}"></head>
+<body>
+
+<div layout:fragment="content" class="container-fluid py-3">
+    <div class="bg-white shadow rounded p-3 container">
+        <h5 class="border-bottom py-2"  style="color: #0dcaf0"> Truyện hot</h5>
+        <div class="d-flex flex-row flex-wrap justify-content-between">
+            <div th:each="s : ${stories}" class="col-2-2 p-1 position-relative storyHover"
+                 style="max-height: 150px; max-width: 128px">
+                <a th:href="@{/story/{id}(id=${s.id})}"
+                   class="text-decoration-none">
+                    <img th:src="@{/files/images/{id}/{name}(id=${s.id},name=${s.thumbnail})}"
+                         width="100%"
+                         height="100%"
+                         class=" border border-dark">
+                    <p th:utext="${s.name}"
+                       class="bg-black text-white position-absolute my-0 w-100 text-center"
+                       style="bottom: 0; font-size: 12px; max-width: 120px"></p>
+                </a>
+                <div th:if="${s.status.name() == 'FULL'}" class="position-absolute storiesFull"
+                     th:style="'background: url(/image/hoan-label.webp) no-repeat;background-size: contain;'"></div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end my-2">
+            <a th:if="${stories.size < 40}"
+                    th:href="@{/(size=${stories.size + 10})}"
+                    class="text-decoration-none"> >> Xem thêm <<</a>
+        </div>
+    </div>
+    <div class="bg-white shadow rounded p-3 my-3 container">
+        <h5 class="border-bottom py-2"  style="color: #0dcaf0"> Chương mới cập nhật</h5>
+        <section class="intro">
+            <div class="bg-image h-100" style="background-color: #f5f7fa;">
+                <div class="mask d-flex align-items-center h-100">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-12 px-0">
+                                <div class="card">
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true"
+                                             style="position: relative; height: 700px">
+                                            <table class="table table-striped mb-0">
+                                                <thead style="background-color: #002d72;">
+                                                <tr>
+                                                    <th scope="col">Tên</th>
+                                                    <th scope="col">Thể loại</th>
+                                                    <th scope="col">Chương</th>
+                                                    <th scope="col">Tiêu đề</th>
+                                                    <th scope="col">Ngày Đăng</th>
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="c : ${chapters}">
+                                                    <td>
+                                                        <a th:href="@{/story/{id}(id=${c.stories.id})}"
+                                                           th:utext="${c.stories.name}"
+                                                           class="text-decoration-none text-secondary">
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a th:href="@{/search(param=${g.genre.name})}"
+                                                           class="text-decoration-none text-secondary"
+                                                           th:if="${i.count != c.stories.storiesGenres.size()}"
+                                                           th:each="g,i : ${c.stories.storiesGenres}"
+                                                           th:utext="${g.genre.name} + ', '">
+                                                        </a>
+                                                        <a th:href="@{/search(param=${g.genre.name})}"
+                                                           class="text-decoration-none text-secondary"
+                                                           th:if="${i.count == c.stories.storiesGenres.size()}"
+                                                           th:each="g,i : ${c.stories.storiesGenres}"
+                                                           th:utext="${g.genre.name} ">
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a th:href="@{/{storyId}/chapter/{id}(storyId=${c.stories.id},id=${c.id})}"
+                                                           th:utext="${'Chuong '+ c.number}"
+                                                           class="text-decoration-none ">
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a th:href="@{/{storyId}/chapter/{id}(storyId=${c.stories.id},id=${c.id})}"
+                                                           th:utext="${c.title}"
+                                                           class="text-decoration-none text-secondary">
+                                                        </a>
+                                                    </td>
+                                                    <td th:utext="${c.createDate}"></td>
+                                                    <td></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="bg-white shadow rounded p-3 container">
+        <h5 class="border-bottom py-2"  style="color: #0dcaf0"> Truyện đã hoàn thành</h5>
+        <div class="d-flex flex-row flex-wrap justify-content-between">
+            <div th:each="s : ${storiesFull}" class="col-2 p-1 storyHover">
+                <a th:href="@{/story/{id}(id=${s.id})}"
+                   class="text-decoration-none flex-column d-flex align-items-center"
+                >
+                    <img th:src="@{/files/images/{id}/{name}(id=${s.id},name=${s.thumbnail})}"
+                         class="border border-5 border-dark"
+                         width="100%" height="auto"
+                         style="max-width: 164px; max-height: 245px">
+                    <h6 th:utext="${s.name}" class="mt-2 text-center" style="max-width: 164px; min-height: 60px"></h6>
+                    <p class="text-center text-white bg-info rounded border px-3"
+                       th:utext="${'Full: ' + s.chapterTotal + 'chương'}"></p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
